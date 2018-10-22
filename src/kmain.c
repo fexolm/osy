@@ -1,23 +1,41 @@
-/* The C function */
-#define FB_GREEN     2
-#define FB_DARK_GREY 8
+#include "gdt.h"
+#include "pic.h"
+#include "idt.h"
+#include "interrupt.h"
+#include "constants.h"
+#include "tss.h"
+#include "keyboard.h"
+#include "fb.h"
+#include "io.h"
 
-char *fb = (char *)0x000B8000;
-
-void fb_write_cell(unsigned int i, char c, unsigned char fg, unsigned char bg)
+static uint32_t kinit()
 {
-	fb[i] = c;
-	fb[i + 1] = ((fg & 0x0F) << 4) | (bg & 0x0F);
+	disable_interrupts();
+
+	uint32_t tss_vaddr = tss_init();
+	gdt_init(tss_vaddr);
+	idt_init();
+	pic_init();
+	kbd_init();
+	fb_init();
+
+	enable_interrupts();
+	return 0;
 }
 
-void kmain() {
-	char text[] = "It works!";
-	int i = 0;
-	for (; text[i]; i++) {
-		fb_write_cell(i * 2, text[i], FB_GREEN, FB_DARK_GREY);
-	}
-	for (i = i * 2; i < 500; i++) {
-		fb_write_cell(i, ' ', FB_GREEN, FB_DARK_GREY);
-	}
+static void start_init()
+{
+	fb_clear();
+
+	fb_put_b(3);
 	while (1);
+}
+
+int kmain()
+{
+	kinit();
+
+	start_init();
+
+	return 0xDEADBEEF;
 }

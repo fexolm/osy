@@ -1,4 +1,4 @@
-megs:            32
+megs:            128
 ata0-master:     type=cdrom, path=bin/os.iso, status=inserted
 boot:            cdrom
 log:             bochslog.txt
