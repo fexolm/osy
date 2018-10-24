@@ -7,7 +7,8 @@
 #include "keyboard.h"
 #include "fb.h"
 #include "io.h"
-
+#include "../lib/multiboot/multiboot.h"
+#include "common.h"
 static uint32_t kinit()
 {
 	disable_interrupts();
@@ -26,16 +27,21 @@ static uint32_t kinit()
 static void start_init()
 {
 	fb_clear();
-
-	fb_put_b(3);
-	while (1);
 }
 
-int kmain()
+typedef void(*call_module_t)(void);
+int kmain(const multiboot_info_t *mbinfo)
 {
+
 	kinit();
-
 	start_init();
+	multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
+	call_module_t start_program = (call_module_t)mod->mod_start;
 
+	start_program();
+	fb_put_ui(mbinfo->mods_count);
+	fb_put_ui(mod->cmdline);
+
+	while (1);
 	return 0xDEADBEEF;
 }
