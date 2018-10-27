@@ -23,6 +23,7 @@ section .data
 align 4096
 kernel_pt:
     times 1024 dd 0
+
 kernel_pdt:
     dd KERNEL_PDT_ID_MAP
     times 1023 dd 0
@@ -63,6 +64,7 @@ set_up_kernel_pt:
     mov eax, (kernel_pt - KERNEL_START_VADDR)
     mov ecx, KERNEL_PT_CFG
 
+; kernel memory init
 .loop:
     mov [eax], ecx
     add eax, 4
@@ -95,6 +97,12 @@ higher_half:
     invlpg [0]
     mov esp, kernel_stack+KERNEL_STACK_SIZE  ; set up the stack
 
+push kernel_pt
+push kernel_pdt
+push kernel_physical_end
+push kernel_physical_start
+push kernel_virtual_end
+push kernel_virtual_start
 push ebx
 call kmain
 
