@@ -32,7 +32,7 @@ void pic_init(void)
 }
 
 void pic_acknowledge()
-{	
+{
     outb(PIC1_PORT_A, PIC_EOI);
     outb(PIC2_PORT_A, PIC_EOI);
 }
