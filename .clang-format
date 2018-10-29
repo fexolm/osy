@@ -1,0 +1,26 @@
+﻿---
+BasedOnStyle: LLVM
+AlignEscapedNewlinesLeft: 'true'
+AlignTrailingComments: 'false'
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: 'true'
+AllowShortLoopsOnASingleLine: 'false'
+AlwaysBreakBeforeMultilineStrings: 'true'
+BreakBeforeBraces: Linux
+ColumnLimit: '80'
+IndentWidth: '4'
+Language: Cpp
+MaxEmptyLinesToKeep: '1'
+PenaltyReturnTypeOnItsOwnLine: '0'
+PointerAlignment: Right
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: 'false'
+SpacesBeforeTrailingComments: '1'
+SpacesInCStyleCastParentheses: 'false'
+SpacesInParentheses: 'true'
+TabWidth: '4'
+UseTab: Never
+
+...

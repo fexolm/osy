@@ -1,19 +1,21 @@
+#include "../lib/multiboot/multiboot.h"
+#include "common.h"
+#include "constants.h"
+#include "fb.h"
 #include "gdt.h"
-#include "pic.h"
 #include "idt.h"
 #include "interrupt.h"
-#include "constants.h"
-#include "tss.h"
-#include "keyboard.h"
-#include "fb.h"
 #include "io.h"
 #include "../lib/multiboot/multiboot.h"
 #include "common.h"
 #include "serial.h"
+#include "keyboard.h"
+#include "pic.h"
+#include "tss.h"
 
 static uint32_t kinit()
 {
-	disable_interrupts();
+    disable_interrupts();
 
 	uint32_t tss_vaddr = tss_init();
 	gdt_init(tss_vaddr);
@@ -28,53 +30,37 @@ static uint32_t kinit()
 
 static void start_init()
 {
-	fb_clear();
+    fb_clear();
 }
 
-typedef void(*call_module_t)(void);
+typedef void ( *call_module_t )( void );
 
-int kmain(
-	const multiboot_info_t *mbinfo,
-	uint32_t kernel_virtual_start,
-	uint32_t kernel_virtual_end,
-	uint32_t kernel_physical_start,
-	uint32_t kernel_physical_end,
-	uint32_t *kernel_pdt,
-	uint32_t *kernel_pt
-)
+int kmain( const multiboot_info_t *mbinfo, uint32_t kernel_virtual_start,
+           uint32_t kernel_virtual_end, uint32_t kernel_physical_start,
+           uint32_t kernel_physical_end, uint32_t *kernel_pdt,
+           uint32_t *kernel_pt )
 {
-	UNUSED_ARGUMENT(mbinfo);
+    UNUSED_ARGUMENT( mbinfo );
+    UNUSED_ARGUMENT( kernel_virtual_start );
+    UNUSED_ARGUMENT( kernel_virtual_end );
+    UNUSED_ARGUMENT( kernel_physical_start );
+    UNUSED_ARGUMENT( kernel_physical_end );
+    UNUSED_ARGUMENT( kernel_pdt );
+    UNUSED_ARGUMENT( kernel_pt );
 
-	kinit();
-	serial_push_u8(SERIAL_COM1_BASE, "Hello world");
-	start_init();
-	fb_put_ui_hex(kernel_virtual_start);
-	fb_put_s(" ");
-	fb_put_ui_hex(kernel_virtual_end);
-	fb_put_s("\n");
+    kinit();
+    start_init();
 
-	fb_put_ui_hex(kernel_physical_start);
-	fb_put_s(" ");
-	fb_put_ui_hex(kernel_physical_end);
-	fb_put_s("\n");
-	for (int i = 0; i < 1024; i++) {
-		if (kernel_pdt[i] != 0) {
-			fb_put_ui_hex(kernel_pdt[i]);
-			fb_put_s(" ");
-			fb_put_ui(i);
-		}
-	}
-	fb_put_s("\n");
+    fb_put_ui( mbinfo->mem_lower );
 
-	for (int i = 0; i < 10; i++) {
-		fb_put_ui_hex(kernel_pt[i]);
-		fb_put_s(" ");
-	}
+    fb_put_s( " " );
 
-	//multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
-	//call_module_t start_program = (call_module_t)mod->mod_start;
-	//start_program();
+    fb_put_ui( mbinfo->mem_upper );
 
-	//while (1);
-	return 0xDEADBEEF;
+#if 0
+	multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
+	call_module_t start_program = (call_module_t)mod->mod_start;
+	start_program();
+#endif
+    return 0xDEADBEEF;
 }

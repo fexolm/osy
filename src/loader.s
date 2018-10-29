@@ -1,20 +1,20 @@
 %include "src/constants.inc"
 
-global loader    
+global loader
 global kernel_stack
 
 extern kmain
-extern kernel_virtual_end              
+extern kernel_virtual_end
 extern kernel_virtual_start
 extern kernel_physical_end
 extern kernel_physical_start
 
-MAGIC_NUMBER		equ 0x1BADB002        
-ALIGN_MODULES		equ 1<<0		
+MAGIC_NUMBER		equ 0x1BADB002
+ALIGN_MODULES		equ 1<<0
 MEMINFO				equ 1<<1
-FLAGS				equ ALIGN_MODULES
+FLAGS				equ ALIGN_MODULES | MEMINFO
 
-CHECKSUM			equ -(MAGIC_NUMBER + FLAGS) 
+CHECKSUM			equ -(MAGIC_NUMBER + FLAGS)
 
 KERNEL_PT_CFG       equ 00000000000000000000000000001011b
 KERNEL_PDT_ID_MAP   equ 00000000000000000000000010001011b
@@ -36,18 +36,18 @@ grub_multiboot_info:
     dd 0
 
 section .bss
-align 4                                    
-kernel_stack:                             
-    resb KERNEL_STACK_SIZE                
+align 4
+kernel_stack:
+    resb KERNEL_STACK_SIZE
 
-section .text                       ; start of the text (code) section
-align 4                             ; the code must be 4 byte aligned
-    dd MAGIC_NUMBER                 ; write the magic number
-    dd ALIGN_MODULES                ; write the align modules instruction
-    dd CHECKSUM                     ; write the checksum
-        
+section .text
+align 4
+    dd MAGIC_NUMBER
+    dd FLAGS
+    dd CHECKSUM
 
-loader:                       
+
+loader:
     mov ecx, (grub_magic_number - KERNEL_START_VADDR)
     mov [ecx], eax
     mov ecx, (grub_multiboot_info - KERNEL_START_VADDR)
@@ -97,12 +97,15 @@ higher_half:
     invlpg [0]
     mov esp, kernel_stack+KERNEL_STACK_SIZE  ; set up the stack
 
-push kernel_pt
-push kernel_pdt
-push kernel_physical_end
-push kernel_physical_start
-push kernel_virtual_end
-push kernel_virtual_start
-push ebx
-call kmain
 
+    mov ebx, DWORD [grub_multiboot_info]
+    add ebx, KERNEL_START_VADDR
+
+    push kernel_pt
+    push kernel_pdt
+    push kernel_physical_end
+    push kernel_physical_start
+    push kernel_virtual_end
+    push kernel_virtual_start
+    push ebx
+    call kmain

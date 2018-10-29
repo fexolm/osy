@@ -47,14 +47,14 @@ struct tss {
     uint16_t debug_and_reserved; /* The lowest bit is for debug */
     uint16_t io_map_base;
 
-} __attribute__((packed));
+} __attribute__( ( packed ) );
 
 typedef struct tss tss_t;
 
 uint32_t tss_init();
 
-void tss_load_and_set(uint16_t tss_segsel); /* defined in tss_asm.s */
+void tss_load_and_set( uint16_t tss_segsel ); /* defined in tss_asm.s */
 
-void tss_set_kernel_stack(uint16_t segsel, uint32_t vaddr);
+void tss_set_kernel_stack( uint16_t segsel, uint32_t vaddr );
 
 #endif /* TSS_H */
