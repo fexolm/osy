@@ -20,7 +20,7 @@ void init_serial(uint32_t com);
  * @param com - address of serial port
  * @param str - string which would be writen to serial port
  */
-void write_serial(uint32_t com, char *str);
+void serial_push_s(uint32_t com, char *str);
 
 /*!
  * @brief read from address of serial port
