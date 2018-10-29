@@ -21,7 +21,7 @@ static uint32_t kinit()
 	pic_init();
 	kbd_init();
 	fb_init();
-	init_serial(SERIAL_COM1_BASE);
+	serial_init(SERIAL_COM1);
 	enable_interrupts();
 	return 0;
 }
