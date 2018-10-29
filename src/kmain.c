@@ -21,7 +21,7 @@ static uint32_t kinit()
 	pic_init();
 	kbd_init();
 	fb_init();
-
+	init_serial(SERIAL_COM1_BASE);
 	enable_interrupts();
 	return 0;
 }
@@ -46,6 +46,7 @@ int kmain(
 	UNUSED_ARGUMENT(mbinfo);
 
 	kinit();
+	write_serial(SERIAL_COM1_BASE, "Alisher Gulov - a student of KFU!");
 	start_init();
 	fb_put_ui_hex(kernel_virtual_start);
 	fb_put_s(" ");

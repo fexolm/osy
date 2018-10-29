@@ -7,7 +7,8 @@
 #define SERIAL_COM3_BASE                0x3E8    
 #define SERIAL_COM4_BASE                0x2E8    
 
- void init_serial();
+ void init_serial(uint32_t com);
  void write_serial(uint32_t com, char *str);
+ int receive_serial(uint32_t com);
 
 #endif 
