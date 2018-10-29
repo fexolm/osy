@@ -9,6 +9,8 @@
 #include "io.h"
 #include "../lib/multiboot/multiboot.h"
 #include "common.h"
+#include "serial.h"
+
 static uint32_t kinit()
 {
 	disable_interrupts();
@@ -35,6 +37,9 @@ int kmain(const multiboot_info_t *mbinfo)
 
 	kinit();
 	start_init();
+
+	init_serial();
+
 	multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
 	call_module_t start_program = (call_module_t)mod->mod_start;
 
