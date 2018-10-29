@@ -3,5 +3,5 @@
 
 #include "stdint.h"
 
-uint32_t kbd_init(void);
+uint32_t kbd_init( void );
 #endif /* KEYBOARD_H */
