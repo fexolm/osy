@@ -7,8 +7,26 @@
 #define SERIAL_COM3_BASE                0x3E8    
 #define SERIAL_COM4_BASE                0x2E8    
 
- void init_serial(uint32_t com);
- void write_serial(uint32_t com, char *str);
- int receive_serial(uint32_t com);
+/*!
+ * @brief initialize serial port
+ *
+ * @param com - address of serial port
+ */
+void init_serial(uint32_t com);
+
+/*!
+ * @brief write to address of serial port
+ *
+ * @param com - address of serial port
+ * @param str - string which would be writen to serial port
+ */
+void write_serial(uint32_t com, char *str);
+
+/*!
+ * @brief read from address of serial port
+ *
+ * @param com - address of serial port
+ */
+uint8_t serial_recv_u8(uint32_t com);
 
 #endif 
