@@ -8,7 +8,9 @@
 #include "io.h"
 #include "keyboard.h"
 #include "pic.h"
+#include "serial.h"
 #include "tss.h"
+
 static uint32_t kinit()
 {
     disable_interrupts();
@@ -19,7 +21,7 @@ static uint32_t kinit()
     pic_init();
     kbd_init();
     fb_init();
-
+    serial_init( SERIAL_COM1 );
     enable_interrupts();
     return 0;
 }
@@ -47,11 +49,7 @@ int kmain( const multiboot_info_t *mbinfo, uint32_t kernel_virtual_start,
     kinit();
     start_init();
 
-    fb_put_ui( mbinfo->mem_lower );
-
-    fb_put_s( " " );
-
-    fb_put_ui( mbinfo->mem_upper );
+    serial_push_s( SERIAL_COM1, "Test serial" );
 
 #if 0
 	multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
