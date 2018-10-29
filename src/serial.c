@@ -96,7 +96,7 @@ uint8_t serial_recv_u8(uint32_t com){
     return inb(com);
 }
 
-void write_serial(uint32_t com, char *str){
+void serial_push_s(uint32_t com, char *str){
     char * i;
     for (i=str; *i; i++) {
         while(fifo_empty(com) == 0);
