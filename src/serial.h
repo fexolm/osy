@@ -15,7 +15,7 @@
 void init_serial(uint32_t com);
 
 /*!
- * @brief write to address of serial port
+ * @brief write string to specific serial port
  *
  * @param com - address of serial port
  * @param str - string which would be writen to serial port
