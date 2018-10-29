@@ -23,7 +23,7 @@ void init_serial(uint32_t com);
 void serial_push_s(uint32_t com, char *str);
 
 /*!
- * @brief read from address of serial port
+ * @brief read byte from specific serial port
  *
  * @param com - address of serial port
  */
