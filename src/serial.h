@@ -5,7 +5,7 @@
 #define SERIAL_COM1                0x3F8   
 #define SERIAL_COM2                0x2F8
 #define SERIAL_COM3                0x3E8    
-#define SERIAL_COM4_BASE                0x2E8    
+#define SERIAL_COM4                0x2E8    
 
 /*!
  * @brief initialize serial port
