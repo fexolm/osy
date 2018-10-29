@@ -1,3 +1,2 @@
 section .text
-	jmp $
 	ret

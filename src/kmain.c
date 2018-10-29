@@ -32,21 +32,48 @@ static void start_init()
 }
 
 typedef void(*call_module_t)(void);
-int kmain(const multiboot_info_t *mbinfo)
+
+int kmain(
+	const multiboot_info_t *mbinfo,
+	uint32_t kernel_virtual_start,
+	uint32_t kernel_virtual_end,
+	uint32_t kernel_physical_start,
+	uint32_t kernel_physical_end,
+	uint32_t *kernel_pdt,
+	uint32_t *kernel_pt
+)
 {
+	UNUSED_ARGUMENT(mbinfo);
 
 	kinit();
 	start_init();
+	fb_put_ui_hex(kernel_virtual_start);
+	fb_put_s(" ");
+	fb_put_ui_hex(kernel_virtual_end);
+	fb_put_s("\n");
 
-	init_serial();
+	fb_put_ui_hex(kernel_physical_start);
+	fb_put_s(" ");
+	fb_put_ui_hex(kernel_physical_end);
+	fb_put_s("\n");
+	for (int i = 0; i < 1024; i++) {
+		if (kernel_pdt[i] != 0) {
+			fb_put_ui_hex(kernel_pdt[i]);
+			fb_put_s(" ");
+			fb_put_ui(i);
+		}
+	}
+	fb_put_s("\n");
 
-	multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
-	call_module_t start_program = (call_module_t)mod->mod_start;
+	for (int i = 0; i < 10; i++) {
+		fb_put_ui_hex(kernel_pt[i]);
+		fb_put_s(" ");
+	}
 
-	start_program();
-	fb_put_ui(mbinfo->mods_count);
-	fb_put_ui(mod->cmdline);
+	//multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
+	//call_module_t start_program = (call_module_t)mod->mod_start;
+	//start_program();
 
-	while (1);
+	//while (1);
 	return 0xDEADBEEF;
 }

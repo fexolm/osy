@@ -5,7 +5,7 @@ BINARY_DIR = bin/
 ISO_DIR = $(BINARY_DIR)iso/
 SRC_DIR = src/
 
-CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
+CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c -fno-pic
 ASFLAGS = -f elf
 LDFLAGS = -T $(SRC_DIR)link.ld -melf_i386
 
