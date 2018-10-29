@@ -58,7 +58,7 @@ static void set_buffer(uint16_t com){
 static void set_modem(uint16_t com){
     /*
      * Configuring the Modem. Hardware flow control via the
-       Ready To Transmit (RTS) and Data Terminal Ready (DTR) pins.
+       * Ready To Transmit (RTS) and Data Terminal Ready (DTR) pins.
      *
      * Bit:     | 7 | 6 | 5  | 4  | 3   | 2   | 1   | 0   |
      * Content: | r | r | af | lb | ao2 | ao1 | rts | dtr |
