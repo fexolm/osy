@@ -38,7 +38,7 @@ static void set_line(uint16_t com){
 static void set_buffer(uint16_t com){
     /*
      * Configure FIFO Buffer queue for sending 
-      and receiving data to serial port(14 byte of queue)
+      * and receiving data to serial port(14 byte of queue)
      *
      * Bit:     | 7 6 | 5  | 4 | 3   | 2   | 1   | 0 |
      * Content: | lvl | bs | r | dma | clt | clr | e |
