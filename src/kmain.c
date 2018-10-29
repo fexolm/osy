@@ -46,7 +46,6 @@ int kmain(
 	UNUSED_ARGUMENT(mbinfo);
 
 	kinit();
-	write_serial(SERIAL_COM1_BASE, "Alisher Gulov - a student of KFU!");
 	start_init();
 	fb_put_ui_hex(kernel_virtual_start);
 	fb_put_s(" ");
