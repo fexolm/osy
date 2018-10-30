@@ -1,5 +1,7 @@
 #ifndef SERIAL_H
 #define SERIAL_H
+
+#include "io_stream.h"
 #include "stdint.h"
 
 #define SERIAL_COM1 0x3F8
@@ -28,5 +30,12 @@ void serial_push_s( uint32_t com, char *str );
  * @param com - address of serial port
  */
 uint8_t serial_recv_u8( uint32_t com );
+
+/*!
+ * @brief returns io_stream which could be used to write/read to serial port
+ *
+ * @param com - address of serial port
+ */
+struct io_stream serial_make_io( uint32_t com );
 
 #endif
