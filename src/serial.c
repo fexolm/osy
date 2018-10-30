@@ -108,13 +108,18 @@ uint8_t serial_recv_u8( uint32_t com )
     return inb( com );
 }
 
+void serial_push_u8( uint32_t com, uint8_t c )
+{
+    while ( !fifo_empty( com ) )
+        ;
+    outb( com, c );
+}
+
 void serial_push_s( uint32_t com, char *str )
 {
     int i = 0;
     for ( i = 0; str[i]; i++ ) {
-        while ( !fifo_empty( com ) )
-            ;
-        outb( com, str[i] );
+        serial_push_u8( com, str[i] );
     }
 }
 
@@ -124,4 +129,30 @@ void serial_init( uint32_t com )
     set_line( com );
     set_buffer( com );
     set_modem( com );
+}
+
+static uint8_t io_read_adapter( void *data )
+{
+    uint32_t com = (uint32_t)data;
+    return serial_recv_u8( com );
+}
+
+static void io_write_adapter( void *data, uint8_t c )
+{
+    uint32_t com = (uint32_t)data;
+    serial_push_u8( com, c );
+}
+
+struct io_stream serial_make_io( uint32_t com )
+{
+    struct io_stream s;
+    struct io_stream_read sr;
+    struct io_stream_write sw;
+    sr.func = io_read_adapter;
+    sr.data = (void *)com;
+    sw.func = io_write_adapter;
+    sw.data = (void *)com;
+    s.read = sr;
+    s.write = sw;
+    return s;
 }
