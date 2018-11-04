@@ -9,7 +9,7 @@ CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfile
 ASFLAGS = -f elf
 LDFLAGS = -T $(SRC_DIR)link.ld -melf_i386
 
-OBJ = gdt.o gdt_asm.o idt.o idt_asm.o interrupt.o interrupt_asm.o io.o kmain.o loader.o pic.o tss.o tss_asm.o keyboard.o fb.o serial.o
+OBJ = gdt.o gdt_asm.o idt.o idt_asm.o interrupt.o interrupt_asm.o io.o kmain.o loader.o pic.o tss.o tss_asm.o keyboard.o fb.o serial.o buffer.o
 
 all: prepare kernel.elf os.iso
 

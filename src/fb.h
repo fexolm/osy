@@ -4,6 +4,7 @@
 #include "stdint.h"
 
 void fb_put_b( uint8_t b );
+struct io_stream fb_make_io();
 void fb_put_s( char const *s );
 
 /* output unsigned integer in decimal format */

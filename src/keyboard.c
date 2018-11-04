@@ -1,9 +1,11 @@
 #include "keyboard.h"
+#include "buffer.h"
 #include "common.h"
 #include "fb.h"
 #include "interrupt.h"
 #include "io.h"
 #include "pic.h"
+#
 
 #define KBD_DATA_PORT 0x60
 #define KBD_BUFFER_SIZE 512
@@ -71,6 +73,8 @@
 static char kbd_scan_code_to_ascii( uint8_t sc );
 static uint8_t kbd_read_scan_code( void );
 
+static struct ring_buffer buf;
+
 static void keyboard_handle_interrupt( cpu_state_t state, idt_info_t info,
                                        stack_state_t exec )
 {
@@ -87,13 +91,14 @@ static void keyboard_handle_interrupt( cpu_state_t state, idt_info_t info,
     char c = kbd_scan_code_to_ascii( code );
 
     if ( c != -1 ) {
-        fb_put_b( c );
+        rb_push( &buf, c );
     }
     pic_acknowledge();
 }
 
 uint32_t kbd_init( void )
 {
+    rb_init( &buf );
     register_interrupt_handler( KBD_INT_IDX, keyboard_handle_interrupt );
     return 0;
 }
@@ -266,4 +271,23 @@ static char kbd_scan_code_to_ascii( uint8_t scan_code )
     }
 
     return ch;
+}
+
+uint8_t read_adapter( void *data )
+{
+    UNUSED_ARGUMENT( data );
+    while ( rb_is_empty( &buf ) )
+        ;
+    uint8_t result = rb_peek( &buf );
+    rb_pop( &buf );
+    return result;
+}
+
+struct io_stream kbd_make_io()
+{
+    struct io_stream k;
+    struct io_stream_read rb;
+    rb.func = read_adapter;
+    k.read = rb;
+    return k;
 }
