@@ -98,14 +98,11 @@ higher_half:
     mov esp, kernel_stack+KERNEL_STACK_SIZE  ; set up the stack
 
 
-    mov ebx, DWORD [grub_multiboot_info]
-    add ebx, KERNEL_START_VADDR
-
     push kernel_pt
     push kernel_pdt
     push kernel_physical_end
     push kernel_physical_start
     push kernel_virtual_end
     push kernel_virtual_start
-    push ebx
+    push DWORD [grub_multiboot_info]
     call kmain

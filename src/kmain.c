@@ -10,8 +10,13 @@
 #include "pic.h"
 #include "serial.h"
 #include "tss.h"
+#include "pfa.h"
+#include "memory.h"
 
-static uint32_t kinit()
+#define TO_VIRTUAL(x) (((uint32_t)(x) + KERNEL_START_VADDR))
+
+static uint32_t kinit(const multiboot_info_t *mbinfo,
+                      const struct kernel_memory *mem)
 {
     disable_interrupts();
 
@@ -22,35 +27,32 @@ static uint32_t kinit()
     kbd_init();
     fb_init();
     serial_init( SERIAL_COM1 );
+
+
+    pfa_init(mbinfo, mem);
     enable_interrupts();
     return 0;
 }
 
 static void start_init()
 {
-    fb_clear();
 }
 
 typedef void ( *call_module_t )( void );
 
-int kmain( const multiboot_info_t *mbinfo, uint32_t kernel_virtual_start,
-           uint32_t kernel_virtual_end, uint32_t kernel_physical_start,
-           uint32_t kernel_physical_end, uint32_t *kernel_pdt,
+int kmain( multiboot_info_t *mbinfo,
+           struct kernel_memory mem,
+           uint32_t *kernel_pdt,
            uint32_t *kernel_pt )
 {
-    UNUSED_ARGUMENT( mbinfo );
-    UNUSED_ARGUMENT( kernel_virtual_start );
-    UNUSED_ARGUMENT( kernel_virtual_end );
-    UNUSED_ARGUMENT( kernel_physical_start );
-    UNUSED_ARGUMENT( kernel_physical_end );
+    mbinfo = (multiboot_info_t *)TO_VIRTUAL(mbinfo);
+    mbinfo->mmap_addr = TO_VIRTUAL(mbinfo->mmap_addr);
+
     UNUSED_ARGUMENT( kernel_pdt );
     UNUSED_ARGUMENT( kernel_pt );
 
-    kinit();
+    kinit(mbinfo, &mem);
     start_init();
-
-    serial_push_s( SERIAL_COM1, "Test serial" );
-
 #if 0
 	multiboot_module_t * mod = (multiboot_module_t *)mbinfo->mods_addr;
 	call_module_t start_program = (call_module_t)mod->mod_start;
