@@ -178,5 +178,6 @@ void fb_move_cursor( uint16_t row, uint16_t col )
 
 int fb_init( void )
 {
+    fb_clear();
     return 0;
 }
