@@ -1,6 +1,7 @@
 #include "fb.h"
 #include "common.h"
 #include "io.h"
+#include "io_stream.h"
 
 #define FB_MEMORY KERNEL_START_VADDR + 0x000B8000
 
@@ -86,6 +87,11 @@ static void scroll()
     for ( c = 0; c < FB_NUM_COLS; ++c ) {
         write_at( ' ', FB_NUM_ROWS - 1, c );
     }
+}
+static void write_adapter( void *data, uint8_t c )
+{
+    UNUSED_ARGUMENT( data );
+    fb_put_b( c );
 }
 
 void fb_put_b( uint8_t b )
@@ -180,4 +186,13 @@ int fb_init( void )
 {
     fb_clear();
     return 0;
+}
+
+struct io_stream fb_make_io()
+{
+    struct io_stream s;
+    struct io_stream_write sw;
+    sw.func = write_adapter;
+    s.write = sw;
+    return s;
 }
